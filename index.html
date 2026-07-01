@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Santhi Tailor – Professional tailor in Chromepet, Chennai. Measurement calculator for blouse and garment stitching.">
+    <title>Santhi Tailor – Chromepet, Chennai</title>
+    <style>
+        /* ==========================================
+           CSS VARIABLES
+        ========================================== */
+        :root {
+            --maroon-dark: #2C0010;
+            --maroon:       #5C0020;
+            --maroon-mid:   #7A0030;
+            --gold:         #BF8A22;
+            --gold-light:   #D9A83A;
+            --gold-bright:  #F0C96A;
+            --gold-pale:    #FEF6E4;
+            --white:        #FFFFFF;
+            --text-body:    rgba(255,255,255,0.82);
+            --text-muted:   rgba(255,255,255,0.42);
+            --border-gold:  rgba(191,138,34,0.28);
+            --border-gold-hover: rgba(191,138,34,0.52);
+            --glass-bg:     rgba(255,255,255,0.045);
+            --shadow-card:  0 8px 32px rgba(0,0,0,0.38);
+            --shadow-hover: 0 18px 52px rgba(0,0,0,0.52);
+            --radius-card:  1.25rem;
+            --radius-btn:   2rem;
+            --radius-input: 0.7rem;
+            --transition:   0.26s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        /* ==========================================
+           RESET & BASE
+        ========================================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--maroon-dark);
+            color: var(--text-body);
+            min-height: 100vh;
+            line-height: 1.72;
+            overflow-x: hidden;
+        }
+
+        /* Woven fabric texture – subtle diagonal weave */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                repeating-linear-gradient(
+                    135deg,
+                    rgba(191,138,34,0.035) 0px, rgba(191,138,34,0.035) 1px,
+                    transparent 1px, transparent 14px
+                ),
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(191,138,34,0.025) 0px, rgba(191,138,34,0.025) 1px,
+                    transparent 1px, transparent 14px
+                );
+        }
+
+        /* Radial glow behind hero */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -30vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            max-width: 700px;
+            height: 60vh;
+            background: radial-gradient(ellipse at center, rgba(124,0,48,0.55) 0%, transparent 72%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ==========================================
+           PAGE WRAPPER
+        ========================================== */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 1rem 1rem 4rem;
+        }
+
+        /* ==========================================
+           HERO
+        ========================================== */
+        .hero {
+            text-align: center;
+            padding: 4.5rem 1.5rem 3.5rem;
+        }
+
+        .hero-emblem {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--gold), var(--gold-bright));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.75rem;
+            font-size: 2rem;
+            box-shadow:
+                0 0 0 4px rgba(191,138,34,0.22),
+                0 0 0 8px rgba(191,138,34,0.08),
+                var(--shadow-card);
+            animation: pulse-ring 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(191,138,34,0.22), 0 0 0 8px rgba(191,138,34,0.08), var(--shadow-card); }
+            50%       { box-shadow: 0 0 0 6px rgba(191,138,34,0.32), 0 0 0 14px rgba(191,138,34,0.06), var(--shadow-card); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 7vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 0.35rem;
+        }
+
+        .hero h1 em {
+            color: var(--gold-bright);
+            font-style: normal;
+        }
+
+        .hero-sub {
+            font-size: 0.82rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1.75rem;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: rgba(191,138,34,0.13);
+            border: 1px solid rgba(191,138,34,0.35);
+            border-radius: var(--radius-btn);
+            padding: 0.5rem 1.3rem;
+            font-size: 0.88rem;
+            color: var(--gold-bright);
+            margin-bottom: 0.6rem;
+        }
+
+        .stars { color: var(--gold-light); letter-spacing: 2px; }
+
+        .reviews-note {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 2.2rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ==========================================
+           BUTTONS
+        ========================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 0.82rem 1.85rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: var(--transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--maroon-dark);
+            box-shadow: 0 4px 22px rgba(191,138,34,0.42);
+        }
+        .btn-gold:hover, .btn-gold:focus-visible {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-bright));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(191,138,34,0.58);
+        }
+        .btn-gold:active { transform: translateY(0); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gold-light);
+            border: 1.5px solid rgba(191,138,34,0.45);
+        }
+        .btn-outline:hover, .btn-outline:focus-visible {
+            background: rgba(191,138,34,0.1);
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.13);
+            font-size: 0.85rem;
+            padding: 0.65rem 1.25rem;
+            font-weight: 600;
+        }
+        .btn-ghost:hover, .btn-ghost:focus-visible {
+            background: rgba(255,255,255,0.12);
+            color: var(--white);
+        }
+
+        .btn-calc-main {
+            width: 100%;
+            justify-content: center;
+            font-size: 1.05rem;
+            padding: 1.05rem 2rem;
+            margin-top: 1.75rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* ==========================================
+           CARDS (Glassmorphism)
+        ========================================== */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius-card);
+            padding: 2rem 2rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-card);
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .card:hover { border-color: var(--border-gold-hover); box-shadow: var(--shadow-hover); }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.03em;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        .card-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(191,138,34,0.38), transparent);
+        }
+
+        /* ==========================================
+           CONTACT SECTION
+        ========================================== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+        }
+        @media (max-width: 500px) { .contact-grid { grid-template-columns: 1fr; } }
+
+        .contact-cell {
+            background: rgba(191,138,34,0.07);
+            border: 1px solid rgba(191,138,34,0.18);
+            border-radius: 0.9rem;
+            padding: 1.2rem 1.35rem;
+        }
+        .contact-cell-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .contact-cell-body {
+            font-size: 0.9rem;
+            color: var(--text-body);
+            line-height: 1.65;
+        }
+        .contact-cell-body a {
+            color: var(--gold-bright);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.08rem;
+        }
+        .contact-cell-body a:hover { color: var(--white); }
+
+        /* ==========================================
+           CALCULATOR FORM
+        ========================================== */
+        .input-hint {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 1.4rem;
+        }
+        .input-hint strong { color: var(--gold-light); }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+        }
+        @media (max-width: 460px) { .input-grid { grid-template-columns: 1fr; } }
+
+        .field { display: flex; flex-direction: column; gap: 0.32rem; }
+
+        .field label {
+            font-size: 0.76rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: rgba(191,138,34,0.92);
+            font-weight: 700;
+        }
+        .field-eng {
+            font-size: 0.67rem;
+            color: var(--text-muted);
+            font-family: Georgia, serif;
+            font-style: italic;
+            margin-bottom: 0.1rem;
+        }
+
+        .field input[type="number"] {
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(191,138,34,0.22);
+            border-radius: var(--radius-input);
+            padding: 0.72rem 1rem;
+            font-size: 1rem;
+            color: var(--white);
+            font-family: Georgia, serif;
+            outline: none;
+            width: 100%;
+            transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+            -moz-appearance: textfield;
+        }
+        .field input[type="number"]::-webkit-inner-spin-button,
+        .field input[type="number"]::-webkit-outer-spin-button { opacity: 0.35; }
+        .field input[type="number"]::placeholder { color: rgba(255,255,255,0.22); }
+        .field input[type="number"]:focus {
+            border-color: var(--gold);
+            background: rgba(191,138,34,0.09);
+            box-shadow: 0 0 0 3px rgba(191,138,34,0.16);
+        }
+
+        .field.has-error input[type="number"] {
+            border-color: #FF7070;
+            box-shadow: 0 0 0 3px rgba(255,112,112,0.14);
+        }
+        .field .err-msg {
+            font-size: 0.68rem;
+            color: #FF9898;
+            display: none;
+        }
+        .field.has-error .err-msg { display: block; }
+
+        .calc-footer-hint {
+            text-align: center;
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            margin-top: 0.85rem;
+        }
+
+        /* ==========================================
+           RESULTS PANEL
+        ========================================== */
+        .results-wrap { display: none; }
+        .results-wrap.visible {
+            display: block;
+            animation: slide-up 0.48s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 0.9rem;
+        }
+        @media (max-width: 420px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+
+        .result-cell {
+            background: linear-gradient(135deg, rgba(191,138,34,0.14), rgba(191,138,34,0.05));
+            border: 1px solid rgba(191,138,34,0.3);
+            border-radius: 0.9rem;
+            padding: 1rem 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-cell::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(to bottom, var(--gold-bright), transparent);
+        }
+
+        .result-cell-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(191,138,34,0.75);
+            margin-bottom: 0.35rem;
+            line-height: 1.35;
+        }
+        .result-cell-value {
+            font-size: 1.72rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+        .result-cell-unit {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        /* ==========================================
+           TOAST
+        ========================================== */
+        .toast {
+            position: fixed;
+            bottom: 1.75rem;
+            right: 1.25rem;
+            background: linear-gradient(135deg, #1B5E20, #2E7D32);
+            color: #fff;
+            padding: 0.85rem 1.5rem;
+            border-radius: 0.875rem;
+            font-size: 0.88rem;
+            font-family: Georgia, serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            z-index: 9999;
+            transform: translateY(130%) scale(0.96);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            max-width: calc(100vw - 2.5rem);
+        }
+        .toast.show { transform: translateY(0) scale(1); opacity: 1; }
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+            border-top: 1px solid rgba(191,138,34,0.18);
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            margin-top: 0.5rem;
+        }
+        .footer-brand {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.02em;
+        }
+        .footer-tagline {
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(191,138,34,0.45);
+            margin-top: 0.75rem;
+        }
+
+        /* ==========================================
+           RESPONSIVE TWEAKS
+        ========================================== */
+        @media (max-width: 580px) {
+            .card { padding: 1.5rem 1.25rem; }
+            .hero { padding: 3.5rem 1rem 2.5rem; }
+        }
+
+        /* ==========================================
+           PRINT
+        ========================================== */
+        @media print {
+            body, .card { background: #fff !important; color: #000 !important; }
+            body::before, body::after { display: none; }
+            .hero-actions, .btn-calc-main, .actions-row, footer,
+            #calculator, .hero { display: none !important; }
+            .card { border: 1px solid #ccc !important; box-shadow: none !important; }
+            .result-cell { background: #f9f9f9 !important; border: 1px solid #ddd !important; }
+            .result-cell-value { color: #000 !important; }
+            .result-cell-label { color: #555 !important; }
+            .card-title { color: #500 !important; }
+            .result-cell::before { background: #800 !important; }
+        }
+
+        /* Focus visible for keyboard users */
+        :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+    </style>
+</head>
+<body>
+
+<!-- ==================================================
+     PAGE WRAPPER
+================================================== -->
+<main class="page">
+
+    <!-- ================================================
+         HERO
+    ================================================ -->
+    <header class="hero" aria-labelledby="biz-name">
+        <div class="hero-emblem" aria-hidden="true">✂️</div>
+        <h1 id="biz-name">Santhi <em>Tailor</em></h1>
+        <p class="hero-sub">Tailor · Chromepet · Chennai</p>
+
+        <div class="rating-badge" role="img" aria-label="4.4 star rating on Google">
+            <span class="stars" aria-hidden="true">★★★★☆</span>
+            <strong>4.4</strong>&nbsp;Google Rating
+        </div>
+        <span class="reviews-note">Based on 10 Google Reviews</span>
+
+        <div class="hero-actions">
+            <a href="tel:+919176120496" class="btn btn-gold">📞 Call Now</a>
+            <button class="btn btn-outline" onclick="scrollToCalc()" type="button">
+                🧮 Calculate Measurements
+            </button>
+        </div>
+    </header>
+
+    <!-- ================================================
+         CONTACT
+    ================================================ -->
+    <article class="card" aria-label="Contact information">
+        <h2 class="card-title">📋 Contact</h2>
+        <div class="contact-grid">
+            <div class="contact-cell">
+                <div class="contact-cell-label">📍 Address</div>
+                <address class="contact-cell-body" style="font-style:normal;">
+                    7, 7th St, Vinoboji Nagar,<br>
+                    Vinobaji Nagar, Hasthinapuram,<br>
+                    Chromepet, Chennai&nbsp;–&nbsp;600064
+                </address>
+            </div>
+            <div class="contact-cell">
+                <div class="contact-cell-label">☎ Phone</div>
+                <div class="contact-cell-body">
+                    <a href="tel:+919176120496">+91 91761 20496</a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================
+         MEASUREMENT CALCULATOR
+    ================================================ -->
+    <article class="card" id="calculator" aria-label="Measurement calculator">
+        <h2 class="card-title">🧮 Measurement Calculator</h2>
+
+        <p class="input-hint">
+            All measurements in <strong>inches</strong>&nbsp;·&nbsp;Decimal values accepted&nbsp;·&nbsp;All fields required
+        </p>
+
+        <div class="input-grid">
+
+            <div class="field" id="field-us">
+                <label for="inp-us">உடல் சுற்றளவு</label>
+                <span class="field-eng">Body Circumference</span>
+                <input type="number" id="inp-us" placeholder="e.g. 36"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-us">
+                <span class="err-msg" id="err-us" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-ms">
+                <label for="inp-ms">மார்பு சுற்றளவு</label>
+                <span class="field-eng">Chest Circumference</span>
+                <input type="number" id="inp-ms" placeholder="e.g. 36"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-ms">
+                <span class="err-msg" id="err-ms" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-is">
+                <label for="inp-is">இடுப்பு சுற்றளவு</label>
+                <span class="field-eng">Waist Circumference</span>
+                <input type="number" id="inp-is" placeholder="e.g. 32"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-is">
+                <span class="err-msg" id="err-is" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-sh">
+                <label for="inp-sh">சோல்டர்</label>
+                <span class="field-eng">Shoulder</span>
+                <input type="number" id="inp-sh" placeholder="e.g. 15"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-sh">
+                <span class="err-msg" id="err-sh" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-kn">
+                <label for="inp-kn">கை நீளம்</label>
+                <span class="field-eng">Arm Length</span>
+                <input type="number" id="inp-kn" placeholder="e.g. 24"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-kn">
+                <span class="err-msg" id="err-kn" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-ks">
+                <label for="inp-ks">கை சுற்றளவு</label>
+                <span class="field-eng">Arm Circumference</span>
+                <input type="number" id="inp-ks" placeholder="e.g. 12"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-ks">
+                <span class="err-msg" id="err-ks" role="alert">Enter a valid positive value</span>
+            </div>
+
+            <div class="field" id="field-as">
+                <label for="inp-as">ஆம் சுற்றளவு</label>
+                <span class="field-eng">Arm Hole Circumference</span>
+                <input type="number" id="inp-as" placeholder="e.g. 16"
+                       min="0.1" step="0.1" inputmode="decimal" aria-required="true"
+                       aria-describedby="err-as">
+                <span class="err-msg" id="err-as" role="alert">Enter a valid positive value</span>
+            </div>
+
+        </div><!-- /input-grid -->
+
+        <button class="btn btn-gold btn-calc-main" onclick="runCalculation()" type="button">
+            ✨ Calculate
+        </button>
+
+        <p class="calc-footer-hint">
+            All 7 measurements are required to compute results
+        </p>
+    </article>
+
+    <!-- ================================================
+         RESULTS
+    ================================================ -->
+    <div class="results-wrap" id="results" aria-live="polite">
+        <article class="card" aria-label="Calculation results">
+            <h2 class="card-title">📊 Results</h2>
+
+            <div class="results-grid">
+                <div class="result-cell">
+                    <div class="result-cell-label">Body</div>
+                    <div class="result-cell-value" id="r-body">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Arm Irakkam</div>
+                    <div class="result-cell-value" id="r-arm">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Shoulder</div>
+                    <div class="result-cell-value" id="r-shoulder">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Neck Agalam</div>
+                    <div class="result-cell-value" id="r-neck">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Back Dot Height</div>
+                    <div class="result-cell-value" id="r-back-dot">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Front Dot Height From Top</div>
+                    <div class="result-cell-value" id="r-front-top">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Front Dot Height From Bottom</div>
+                    <div class="result-cell-value" id="r-front-bot">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Dot to Center</div>
+                    <div class="result-cell-value" id="r-dot-center">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+                <div class="result-cell">
+                    <div class="result-cell-label">Front Dot Width</div>
+                    <div class="result-cell-value" id="r-dot-width">—</div>
+                    <div class="result-cell-unit">inches</div>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn btn-ghost" onclick="copyResults()" type="button">📋 Copy Results</button>
+                <button class="btn btn-ghost" onclick="window.print()" type="button">🖨 Print</button>
+                <button class="btn btn-ghost" onclick="resetAll()" type="button">🔄 Reset</button>
+            </div>
+        </article>
+    </div>
+
+    <!-- ================================================
+         FOOTER
+    ================================================ -->
+    <footer>
+        <span class="footer-brand">✂️ Santhi Tailor</span>
+        📍 Chromepet, Chennai &nbsp;·&nbsp; ☎ +91 91761 20496
+        <span class="footer-tagline">Professional Tailoring Measurement Calculator</span>
+    </footer>
+
+</main><!-- /page -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+<script>
+    'use strict';
+
+    /* -----------------------------------------------
+       FIELD CONFIG
+    ----------------------------------------------- */
+    const FIELDS = ['us', 'ms', 'is', 'sh', 'kn', 'ks', 'as'];
+
+    /* -----------------------------------------------
+       TOAST
+    ----------------------------------------------- */
+    let _toastTimer;
+    function showToast(msg, icon) {
+        icon = icon || '✅';
+        clearTimeout(_toastTimer);
+        var t = document.getElementById('toast');
+        t.textContent = icon + ' ' + msg;
+        t.classList.add('show');
+        _toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3200);
+    }
+
+    /* -----------------------------------------------
+       SCROLL HELPERS
+    ----------------------------------------------- */
+    function scrollToCalc() {
+        document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function scrollToResults() {
+        var el = document.getElementById('results');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* -----------------------------------------------
+       VALIDATION
+    ----------------------------------------------- */
+    function getVal(id) {
+        return parseFloat(document.getElementById('inp-' + id).value);
+    }
+
+    function validateField(id) {
+        var input = document.getElementById('inp-' + id);
+        var field = document.getElementById('field-' + id);
+        var val   = parseFloat(input.value);
+        if (input.value === '' || isNaN(val) || val <= 0) {
+            field.classList.add('has-error');
+            return false;
+        }
+        field.classList.remove('has-error');
+        return true;
+    }
+
+    /* Live validation – clear error once a valid value is typed */
+    FIELDS.forEach(function (id) {
+        var el = document.getElementById('inp-' + id);
+        el.addEventListener('input', function () {
+            /* Strip leading minus – prevent negative input */
+            if (parseFloat(el.value) < 0) { el.value = ''; }
+            if (el.value !== '') { validateField(id); }
+        });
+    });
+
+    /* -----------------------------------------------
+       CALCULATE
+    ----------------------------------------------- */
+    function runCalculation() {
+        /* 1. Validate all fields */
+        var allOk = true;
+        FIELDS.forEach(function (id) { if (!validateField(id)) allOk = false; });
+
+        if (!allOk) {
+            showToast('Please fill all 7 fields with valid measurements', '⚠️');
+            var firstErr = document.querySelector('.field.has-error');
+            if (firstErr) { firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            return;
+        }
+
+        /* 2. Read raw values */
+        var us = getVal('us');
+        var ms = getVal('ms');
+        var is = getVal('is');
+        var sh = getVal('sh');
+        /* kn, ks, as are captured but not used in current formula set */
+
+        /* 3. Apply formulas */
+        var body          = (us / 4) + 0.5;
+        var armIrakkam    = us / 6;
+        var shoulder      = (sh / 2) - 1.25;
+        var neckAgalam    = us / 12;
+        var backDotH      = ms / 4;
+        var frontDotTop   = (ms / 4) + 0.5;
+        var frontDotBot   = (frontDotTop / 2) - 1;
+        var dotToCenter   = frontDotBot + 0.5;
+        var frontDotWidth = (ms - is) / 2;
+
+        /* 4. Format helper */
+        function f(n) { return n.toFixed(2); }
+
+        /* 5. Render values */
+        document.getElementById('r-body').textContent        = f(body);
+        document.getElementById('r-arm').textContent         = f(armIrakkam);
+        document.getElementById('r-shoulder').textContent    = f(shoulder);
+        document.getElementById('r-neck').textContent        = f(neckAgalam);
+        document.getElementById('r-back-dot').textContent    = f(backDotH);
+        document.getElementById('r-front-top').textContent   = f(frontDotTop);
+        document.getElementById('r-front-bot').textContent   = f(frontDotBot);
+        document.getElementById('r-dot-center').textContent  = f(dotToCenter);
+        document.getElementById('r-dot-width').textContent   = f(frontDotWidth);
+
+        /* 6. Reveal results panel */
+        var panel = document.getElementById('results');
+        panel.classList.add('visible');
+
+        /* 7. Scroll after paint */
+        setTimeout(scrollToResults, 90);
+        showToast('Measurements calculated successfully!', '✅');
+    }
+
+    /* -----------------------------------------------
+       COPY RESULTS
+    ----------------------------------------------- */
+    function copyResults() {
+        var lines = [
+            '📐 Santhi Tailor – Measurement Results',
+            '───────────────────────────────────────────',
+            'Body                        : ' + document.getElementById('r-body').textContent       + ' in',
+            'Arm Irakkam                 : ' + document.getElementById('r-arm').textContent        + ' in',
+            'Shoulder                    : ' + document.getElementById('r-shoulder').textContent   + ' in',
+            'Neck Agalam                 : ' + document.getElementById('r-neck').textContent       + ' in',
+            'Back Dot Height             : ' + document.getElementById('r-back-dot').textContent   + ' in',
+            'Front Dot Height (Top)      : ' + document.getElementById('r-front-top').textContent  + ' in',
+            'Front Dot Height (Bottom)   : ' + document.getElementById('r-front-bot').textContent  + ' in',
+            'Dot to Center               : ' + document.getElementById('r-dot-center').textContent + ' in',
+            'Front Dot Width             : ' + document.getElementById('r-dot-width').textContent  + ' in',
+            '───────────────────────────────────────────',
+            '✂️  Santhi Tailor',
+            '📍  7, 7th St, Vinoboji Nagar, Chromepet, Chennai – 600064',
+            '☎   +91 91761 20496'
+        ];
+        var text = lines.join('\n');
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+                .then(function () { showToast('Results copied to clipboard!', '📋'); })
+                .catch(function () { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+            showToast('Results copied to clipboard!', '📋');
+        } catch (e) {
+            showToast('Could not copy – please select and copy manually', '⚠️');
+        }
+        document.body.removeChild(ta);
+    }
+
+    /* -----------------------------------------------
+       RESET
+    ----------------------------------------------- */
+    function resetAll() {
+        FIELDS.forEach(function (id) {
+            document.getElementById('inp-' + id).value = '';
+            document.getElementById('field-' + id).classList.remove('has-error');
+        });
+        var panel = document.getElementById('results');
+        panel.classList.remove('visible');
+        scrollToCalc();
+        showToast('Calculator reset', '🔄');
+    }
+</script>
+
+</body>
+</html>
