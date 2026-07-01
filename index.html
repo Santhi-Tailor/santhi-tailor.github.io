@@ -363,7 +363,7 @@
     const frontDotHeightFromBottom = (frontDotHeightFromTop / 2) - 1;
     const dotToCenter = frontDotHeightFromBottom + 0.5;
     const frontDotWidth = (ms - isVal) / 2;
-    const melKaiAlavu = (as/2) - 1;
+    const melKaiAlavu = (asVal/2) - 1;
     const keelKaiAlavu = melKaiAlavu/2;
     
 
@@ -379,8 +379,8 @@
       { label: 'Front Dot Height From Bottom', value: round2(frontDotHeightFromBottom) },
       { label: 'Dot To Center', value: round2(dotToCenter) },
       { label: 'Front Dot Width', value: round2(frontDotWidth) },
-      { label: 'Front Dot Width', value: round2(melKaiAlavu) },
-      { label: 'Front Dot Width', value: round2(keelKaiAlavu) },
+      { label: 'மேல் கை அளவு ', value: round2(melKaiAlavu) },
+      { label: 'கீழ் கை அளவு ', value: round2(keelKaiAlavu) },
     ];
 
     resultGrid.innerHTML = results.map(r => `
